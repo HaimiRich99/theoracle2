@@ -1,0 +1,36 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 2.5.3 # Adjust to your Flutter version
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Flutter web app
+        run: flutter build web
+
+      - name: Deploy to GitHub Pages
+        run: |
+          cp -r build/web/* .
+
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+
+          git add .
+          git commit -m "Deploy to GitHub Pages"
+          git push origin gh-pages
